@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="1">
+<package format="2">
   <name>center_of_mass</name>
   <version>0.0.0</version>
   <description>Calculates the CoM and publishes result as marker msg on /com</description>
@@ -11,10 +11,9 @@
 
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>urdfdom_py</build_depend>
-  <build_depend>rospy</build_depend>
-  <run_depend>urdfdom_py</run_depend>
-  <run_depend>rospy</run_depend>
+  
+  <exec_depend>urdfdom_py</exec_depend>
+  <exec_depend>rospy</exec_depend>
 
 
   <export>
