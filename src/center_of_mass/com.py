@@ -9,22 +9,20 @@ from visualization_msgs.msg import Marker
 class CoMCalculator: 
     
     def __init__(self):
-        rospy.init_node('com_berechnung', anonymous=True)
+        rospy.init_node('com_calculation', anonymous=True)
         self.Mass = 0
         #get robot description from URDF
         robot = URDF.from_parameter_server()
         self.links = robot.link_map
         
         #Delete links, which contain no mass description
-        del self.links["base_link"]
-        del self.links["L_CAMERA"]
-        del self.links["L_Hand_L"]
-        del self.links["L_Hand_R"]
-        del self.links["L_FOOT_BOTTOM_L"]
-        del self.links["L_FOOT_BOTTOM_R"]
-        del self.links["L_FOOT_FRONT_L"]
-        del self.links["L_FOOT_FRONT_R"]
-        del self.links["L_IMU"]
+        unnecessary_links = []
+        for link in self.links:
+            if self.links[link].inertial == None:
+                unnecessary_links.append(link)
+
+        for link in unnecessary_links:
+            del self.links[link]
         
         #Calculate the total mass of the robot
         for link in self.links:
@@ -38,10 +36,6 @@ class CoMCalculator:
         tfBuffer = tf2_ros.Buffer()
         listener = tf2_ros.TransformListener(tfBuffer)
         zuTransformieren = geometry_msgs.msg.PointStamped()
-        transformiert = geometry_msgs.msg.PointStamped()
-        x = 0
-        y = 0
-        z = 0
         marker = Marker()
         marker.header.frame_id = "base_link"
         marker.header.stamp = rospy.Time()
@@ -60,6 +54,9 @@ class CoMCalculator:
         
         #loop for calculating the CoM while robot is not shutdown
         while not rospy.is_shutdown():
+            x = 0
+            y = 0
+            z = 0
             for link in self.links:
                 try:
                     #get transformation matrix of link
@@ -70,7 +67,7 @@ class CoMCalculator:
                     zuTransformieren.point.z = self.links[link].inertial.origin.xyz[2]
                     zuTransformieren.header.frame_id = link
                     zuTransformieren.header.stamp = rospy.get_rostime()
-                    transformiert = tf_geo.do_transform_point(zuTransformieren,trans)
+                    transformiert = tf_geo.do_transform_point(zuTransformieren, trans)
                     #calculate part of CoM equation depending on link
                     x += self.links[link].inertial.mass * transformiert.point.x
                     y += self.links[link].inertial.mass * transformiert.point.y
@@ -78,14 +75,6 @@ class CoMCalculator:
                 except tf2_ros.TransformException as err:
                     rospy.logerr("TF error in COM computation %s", err)
 
-            '''except (tf2_ros.ConnectivityException):
-                print "ConnectivityException"
-            except (tf2_ros.LookupException):
-                print "LookupException"
-            except (tf2_ros.ExtrapolationException):
-                print "ExtrapolationException"
-            except (tf2_ros.InvalidArgumentException):
-                print "InvalidArgumentException"'''
                 
             #finish CoM calculation
             x = x/self.Mass
