@@ -4,8 +4,9 @@
   <version>0.0.0</version>
   <description>Calculates the CoM and publishes result as marker msg on /com</description>
 
-  <maintainer email="5flemmin@bit-bots.de">Tanja Flemming</maintainer>
-  <author email="5flemmin@bit-bots.de">Tanja Flemming</author>
+  <maintainer email="5flemmin@informatik.uni-hamburg.de">Tanja Flemming</maintainer>
+  <maintainer email="info@bit-bots.de">Hamburg Bit-Bots</maintainer>
+  <author email="5flemmin@informatik.uni-hamburg.de">Tanja Flemming</author>
   <author email="info@bit-bots.de">Hamburg Bit-Bots</author>
   <license>BSD</license>
 
