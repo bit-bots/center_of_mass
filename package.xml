@@ -13,8 +13,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   
-  <exec_depend>urdfdom_py</exec_depend>
-  <exec_depend>rospy</exec_depend>
+  <depend>urdfdom_py</depend>
+  <depend>rospy</depend>
 
 
   <export>
