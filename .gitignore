@@ -1,0 +1,7 @@
+# auto-generated documentation
+doc/_build
+doc/_generated
+doc/manifest.yaml
+doc/html
+
+**.pyc
