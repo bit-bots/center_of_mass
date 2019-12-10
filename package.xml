@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>center_of_mass</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>Calculates the CoM and publishes result as marker msg on /com</description>
 
   <maintainer email="5flemmin@informatik.uni-hamburg.de">Tanja Flemming</maintainer>
