@@ -15,7 +15,7 @@
   
   <depend>urdfdom_py</depend>
   <depend>rospy</depend>
-
+  <depend>bitbots_docs</depend>
 
   <export>
     <bitbots_documentation>
