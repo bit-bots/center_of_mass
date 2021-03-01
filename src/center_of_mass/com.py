@@ -10,6 +10,8 @@ class CoMCalculator:
     
     def __init__(self):
         rospy.init_node('com_calculation', anonymous=True)
+        self.base_link_frame = rospy.get_param("~base_link_frame", "base_link_frame")
+        self.tf_prefix = rospy.get_param("~tf_prefix", "")
         self.Mass = 0
         #get robot description from URDF
         robot = URDF.from_parameter_server()
@@ -37,7 +39,7 @@ class CoMCalculator:
         listener = tf2_ros.TransformListener(tfBuffer)
         zuTransformieren = geometry_msgs.msg.PointStamped()
         marker = Marker()
-        marker.header.frame_id = "base_link"
+        marker.header.frame_id = self.base_link_frame
         marker.header.stamp = rospy.Time()
         marker.type = marker.SPHERE
         marker.action = marker.ADD
@@ -47,7 +49,7 @@ class CoMCalculator:
         marker.scale.x = 0.03
         marker.scale.y = 0.03
         marker.scale.z = 0.03
-        pub = rospy.Publisher('/com', Marker, queue_size=1)
+        pub = rospy.Publisher('com', Marker, queue_size=1)
         
         rate = rospy.Rate(1)
         rospy.sleep(1)
@@ -60,12 +62,12 @@ class CoMCalculator:
             for link in self.links:
                 try:
                     #get transformation matrix of link
-                    trans = tfBuffer.lookup_transform("base_link", link, rospy.Time())
+                    trans = tfBuffer.lookup_transform(self.base_link_frame, self.tf_prefix + link, rospy.Time())
                     #transform CoM of link
                     zuTransformieren.point.x = self.links[link].inertial.origin.xyz[0]
                     zuTransformieren.point.y = self.links[link].inertial.origin.xyz[1]
                     zuTransformieren.point.z = self.links[link].inertial.origin.xyz[2]
-                    zuTransformieren.header.frame_id = link
+                    zuTransformieren.header.frame_id = self.tf_prefix + link
                     zuTransformieren.header.stamp = rospy.get_rostime()
                     transformiert = tf_geo.do_transform_point(zuTransformieren, trans)
                     #calculate part of CoM equation depending on link
