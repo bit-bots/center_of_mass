@@ -5,7 +5,6 @@ import tf2_ros
 import tf2_geometry_msgs as tf_geo
 from urdf_parser_py.urdf import URDF
 from visualization_msgs.msg import Marker
-from bitbots_ros_patches.rate import Rate
 
 class CoMCalculator: 
     
@@ -52,7 +51,7 @@ class CoMCalculator:
         marker.scale.z = 0.03
         pub = rospy.Publisher('com', Marker, queue_size=1)
         
-        rate = Rate(1)
+        rate = rospy.Rate(1)
         rospy.sleep(1)
         
         #loop for calculating the CoM while robot is not shutdown
